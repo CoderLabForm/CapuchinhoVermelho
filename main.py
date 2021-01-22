@@ -1,5 +1,5 @@
 import pygame
-import data.linkagem as lnk
+import linkagem as lnk
 
 
 class Game:
@@ -31,5 +31,5 @@ class Game:
 
 pygame.init()
 links = {"main_menu": lnk.main_menu, "exit1": lnk.exit_game, "game": lnk.game}
-Capuchinho_Vermelho = Game(700, 1080, "Capuchinho Vermelho", links)
-Capuchinho_Vermelho.start("main_menu")
+Capuchinho_Vermelho = Game(480, 720, "Capuchinho Vermelho", links)
+Capuchinho_Vermelho.start("game")
