@@ -115,10 +115,10 @@ class GameOver(object):
 
         if(score > currentBestScore):
             text1 = 'New best Score: '
-            currentBestScore = self.score
+            currentBestScore = score
         if(sweets > currentBestSweets):
             text2 = 'Basket: '
-            currentBestSweets = self.sweets
+            currentBestSweets = sweets
 
         file = open('save/data.txt', 'w')
         #                 score                   sweets
