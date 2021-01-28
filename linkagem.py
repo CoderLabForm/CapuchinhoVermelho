@@ -17,4 +17,8 @@ def exit_game(screen):
 def game(screen):
     classe_jogo = j.Jogo(screen)
     classe_jogo.game_loop()
+    return "game_over"
+
+
+def game_over(screen):
     return "main_menu"

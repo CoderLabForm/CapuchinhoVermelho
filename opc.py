@@ -10,13 +10,14 @@ espaco_entre_obstaculos = [o for o in range(0, 600, distancia_obstaculos)]
 
 class Personagem:
     def __init__(self):
-        self.coordenadas_x = [187, 360, 533]
-        self.imagens = [pygame.image.load(f"Imagens/capuchinho/capuchinho"+str(i)+".png") for i in range(4)]
-        self.ordem_imagens = [0, 1, 2, 1, 0, 3, 4, 3]
+        self.coordenadas_x = [137, 310, 483]
+        self.imagens = [pygame.image.load(f"Imagens/capuchinho/capuchinho"+str(i)+".png") for i in range(5)]
+        self.ordem_imagens = [0, 1, 2, 3, 4, 3, 2, 1]
         self.indice_imagem = 0
+        self.aumento_indice = 0
         self.velocidade = 19
-        self.x = 360
-        self.y = 110
+        self.x = 310
+        self.y = 200
         self.altura_salto = 20
         self.keep_moving = False
         self.destination = 1
@@ -45,8 +46,11 @@ class Personagem:
 
     def draw(self, screen):
         screen.blit(self.imagens[self.ordem_imagens[self.indice_imagem]], (self.x, self.y))
-        self.indice_imagem += 1
-        if self.indice_imagem >= 8:
+        self.aumento_indice += 0.15
+        self.indice_imagem += int(self.aumento_indice)
+        if int(self.aumento_indice) == 1:
+            self.aumento_indice = 0
+        if self.indice_imagem >= len(self.ordem_imagens)-1:
             self.indice_imagem = 0
         # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
 
