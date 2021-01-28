@@ -1,6 +1,7 @@
 import jogo as j
 import menu as mn
 import exitMenu as exmn
+import gameOver as go
 
 
 def main_menu(screen):
@@ -18,3 +19,8 @@ def game(screen):
     classe_jogo = j.Jogo(screen)
     classe_jogo.game_loop()
     return "main_menu"
+
+
+def game_over(screen):
+    class_gameOver = go.GameOver(screen)
+    return class_gameOver.drawGameOverMenu()

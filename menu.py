@@ -7,7 +7,8 @@ class MainMenu(object):
         # self.font = pygame.font.SysFont("Arial", 24)
         self.menuControl = 200
         self.count = 0
-        self.buttoms = ['play','exit']
+        self.font = pygame.font.SysFont("comicsansms", 40)
+        self.font.set_bold(True)
         self.play = [pygame.image.load(f"Imagens/buttons/play"+str(i)+".png") for i in range (2)]
         self.playState = self.play[1]
         self.exit = [pygame.image.load(f"Imagens/buttons/exit"+str(i)+".png") for i in range (2)]
@@ -16,7 +17,17 @@ class MainMenu(object):
         self.tutorialState = self.tutorial[0]
         self.run = True
         self.allPosition = [(430, 200), (430, 250), (430, 300)]
+        self.readBestsScores()
 
+    def readBestsScores(self):
+        file = open('save/data.txt','r')
+        data = file.read()
+        file.close()
+        data = data.split(' ')
+        currentBestScore = int(data[0])
+        currentBestSweets = int(data[1])
+
+        self.text = ["Best Score: "+str(currentBestScore), "Basket: "+str(currentBestSweets)]
 
 
     def settingMainMenu(self):
@@ -40,6 +51,13 @@ class MainMenu(object):
         self.screen.blit(self.playState, self.allPosition[0])
         self.screen.blit(self.exitState, self.allPosition[1])
         self.screen.blit(self.tutorialState, self.allPosition[2])
+        
+        y = 20
+        for text in self.text:
+            size = pygame.font.Font.size(self.font, text)
+            line = self.font.render(text, True, (0, 0,0))
+            self.screen.blit(line, (20, y))
+            y+=30
 
 
     def drawMainMenu(self):
