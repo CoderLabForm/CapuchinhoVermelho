@@ -11,7 +11,7 @@ espaco_entre_obstaculos = [o for o in range(0, 600, distancia_obstaculos)]
 class Personagem:
     def __init__(self):
         self.coordenadas_x = [187, 360, 533]
-        self.imagens = [pygame.image.load(f"imagens/capuchinho/capuchinho{i}.png") for i in range(4)]
+        self.imagens = [pygame.image.load(f"Imagens/capuchinho/capuchinho"+str(i)+".png") for i in range(4)]
         self.ordem_imagens = [0, 1, 2, 1, 0, 3, 4, 3]
         self.indice_imagem = 0
         self.velocidade = 19
@@ -141,7 +141,7 @@ class _obstaculo:
 
     def choose_image(self):
         tipo = str(random.randint(1, 4))
-        self.imagem = pygame.image.load(f"Imagens/obstaculos/{tipo}.png")
+        self.imagem = pygame.image.load(f"Imagens/Obstaculos/{tipo}.png")
 
     def calculate_position_x(self, ultimo_x):
         if ultimo_x == 0:

@@ -1,8 +1,11 @@
 import jogo as j
+import menu as mn
 
 
 def main_menu(screen):
-    exit(100)
+    class_menu = mn.MainMenu(screen)
+    class_menu.drawMainMenu()
+    return 'main_menu'
 
 
 def exit_game(screen):
