@@ -50,10 +50,6 @@ class GameOver(object):
         self.screen.blit(self.mainMenuState, self.allPosition[1])
 
 
-    def blitingScoreAndSweets(self):
-        
-        pass
-
     def drawGameOverMenu(self):
         while self.run:
             for event in pygame.event.get():
@@ -85,7 +81,6 @@ class GameOver(object):
                 self.savingBestsScores()
 
             self.settingGameOverMenu()
-            self.blitingScoreAndSweets()
             pygame.display.update()
         return True
 
@@ -113,11 +108,8 @@ class GameOver(object):
             currentBestScore = score
             text2 = 'Basket: '
             currentBestSweets = sweets
-
-        file = open('save/data.txt', 'w')
-        #                 score                   sweets
-        file.write(str(currentBestScore)+' '+str(currentBestSweets))
-        file.close()
+        else:
+            currentBestScore = score
 
         #score
         self.text = [text1+str(currentBestScore),text2+str(currentBestSweets)]
