@@ -74,4 +74,4 @@ class MainMenu(object):
 
             self.settingMainMenu()
             pygame.display.update()
-        return True
+        return True 

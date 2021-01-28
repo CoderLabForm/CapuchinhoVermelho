@@ -1,15 +1,17 @@
 import jogo as j
 import menu as mn
+import exitMenu as exmn
 
 
 def main_menu(screen):
     class_menu = mn.MainMenu(screen)
-    class_menu.drawMainMenu()
-    return 'main_menu'
+    next_link = class_menu.drawMainMenu()
+    return next_link
 
 
 def exit_game(screen):
-    exit()
+    class_exitMenu = exmn.ExitMenu(screen)
+    return class_exitMenu.drawExitMenu()
 
 
 def game(screen):

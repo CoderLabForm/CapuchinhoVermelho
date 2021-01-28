@@ -1,77 +1,73 @@
 import pygame
 from pygame.locals import *
 
-class MainMenu(object):
+class ExitMenu(object):
     def __init__(self, screen):
         self.screen = screen
-        # self.font = pygame.font.SysFont("Arial", 24)
-        self.menuControl = 300
+        self.font = pygame.font.SysFont("comicsansms", 40)
+        self.font.set_bold(True)
+        self.text = 'Do you really want to exit?'
+        self.menuControl = 230
         self.count = 0
-        self.buttoms = ['play','exit']
-        self.play = [pygame.image.load(f"Imagens/buttons/play"+str(i)+".png") for i in range (2)]
-        self.playState = self.play[1]
-        self.exit = [pygame.image.load(f"Imagens/buttons/exit"+str(i)+".png") for i in range (2)]
-        self.exitState = self.exit[0]
-        self.tutorial = [pygame.image.load(f"Imagens/buttons/tutorial"+str(i)+".png") for i in range (2)]
-        self.tutorialState = self.tutorial[0]
-        self.allButtom = []
+        self.buttoms = ['yes','no']
+        self.yes = [pygame.image.load(f"Imagens/buttons/yes"+str(i)+".png") for i in range (2)]
+        self.yesState = self.yes[0]
+        self.no = [pygame.image.load(f"Imagens/buttons/no"+str(i)+".png") for i in range (2)]
+        self.noState = self.no[0]
         self.run = True
-        self.allPosition = [(430, 200), (430, 250), (430, 300)]
+        self.allPosition = [(230, 250), (430, 250)]
 
 
 
-    def settingMainMenu(self):
-        self.back = pygame.image.load("Imagens/buttons/Menu.png").convert_alpha()
+    def settingExitMenu(self):
+        self.back = pygame.image.load("Imagens/buttons/Menu1.png").convert_alpha()
         self.screen.blit(self.back, (0, 0))
 
         # Controling menu buttons efects
-        if (self.menuControl == 200):
-            self.playState = self.play[1]
-            self.exitState = self.exit[0]
-            self.tutorialState = self.tutorial[0]
-        elif(self.menuControl == 300):
-            self.playState = self.play[0]
-            self.exitState = self.exit[1]
-            self.tutorialState = self.tutorial[0]
-        elif(self.menuControl == 400):
-            self.playState = self.play[0]
-            self.exitState = self.exit[0]
-            self.tutorialState = self.tutorial[1]
+        if (self.menuControl == 230):
+            self.yesState = self.yes[1]
+            self.noState = self.no[0]
 
-        self.screen.blit(self.playState, self.allPosition[0])
-        self.screen.blit(self.exitState, self.allPosition[1])
-        self.screen.blit(self.tutorialState, self.allPosition[2])
+        elif(self.menuControl == 430):
+            self.yesState = self.yes[0]
+            self.noState = self.no[1]
 
 
-    def drawMainMenu(self):
+        size = pygame.font.Font.size(self.font, self.text)
+        line = self.font.render(self.text, True, (255, 255,255))
+        self.screen.blit(line, ((700/2-size[0]/2)+20, 100))
+        self.screen.blit(self.yesState, self.allPosition[0])
+        self.screen.blit(self.noState, self.allPosition[1])
+
+
+
+    def drawExitMenu(self):
         while self.run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.run = False
+                    return False
 
             pressed_keys = pygame.key.get_pressed()
-            if(pressed_keys[K_DOWN]):
-                print("ok")
+            if(pressed_keys[K_RIGHT]):
                 pygame.time.delay(200)
-                if(self.menuControl == 400):
-                    self.menuControl = 200
+                if(self.menuControl == 430):
+                    self.menuControl = 430
                 else:
-                    self.menuControl += 100
-            elif(pressed_keys[K_UP]):
+                    self.menuControl += 200
+            elif(pressed_keys[K_LEFT]):
                 pygame.time.delay(200)
-                if(self.menuControl == 200):
-                    self.menuControl = 200
+                if(self.menuControl == 230):
+                    self.menuControl = 230
                 else:
-                    self.menuControl -= 100
+                    self.menuControl -= 200
 
-            if((pressed_keys[K_RETURN])and(self.menuControl==200)):
-                
-                return 'game'
-            elif((pressed_keys[K_RETURN])and(self.menuControl==300)):
-                return 'exit_game'
-            elif((pressed_keys[K_RETURN])and(self.menuControl==300)):
-                return 'game_tutorial'
+            if((pressed_keys[K_RETURN])and(self.menuControl==230)):
+                pygame.time.delay(100)
+                exit()
+            elif((pressed_keys[K_RETURN])and(self.menuControl==430)):
+                pygame.time.delay(200)
+                return 'main_menu'
 
-            self.settingMainMenu()
+            self.settingExitMenu()
             pygame.display.update()
         return True
