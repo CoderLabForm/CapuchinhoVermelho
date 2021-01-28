@@ -21,21 +21,26 @@ class MainMenu(object):
 
 
     def settingMainMenu(self):
-
         self.back = pygame.image.load("Imagens/buttons/Menu.png").convert_alpha()
         self.screen.blit(self.back, (0, 0))
+
+        # Controling menu buttons efects
         if (self.menuControl == 200):
             self.playState = self.play[1]
             self.exitState = self.exit[0]
+            self.tutorialState = self.tutorial[0]
         elif(self.menuControl == 300):
             self.playState = self.play[0]
             self.exitState = self.exit[1]
+            self.tutorialState = self.tutorial[0]
         elif(self.menuControl == 400):
             self.playState = self.play[0]
             self.exitState = self.exit[0]
+            self.tutorialState = self.tutorial[1]
 
         self.screen.blit(self.playState, self.allPosition[0])
         self.screen.blit(self.exitState, self.allPosition[1])
+        self.screen.blit(self.tutorialState, self.allPosition[2])
 
 
     def drawMainMenu(self):
@@ -60,7 +65,7 @@ class MainMenu(object):
                     self.menuControl -= 100
 
             if((pressed_keys[K_RETURN])and(self.menuControl==200)):
-
+                
                 return 'game'
             elif((pressed_keys[K_RETURN])and(self.menuControl==300)):
                 return 'exit_game'
