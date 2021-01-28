@@ -32,4 +32,4 @@ class Game:
 pygame.init()
 links = {"main_menu": lnk.main_menu, "exit_menu": lnk.exit_game, "game": lnk.game, "game_over":lnk.game_over}
 Capuchinho_Vermelho = Game(480, 720, "Capuchinho Vermelho", links)
-Capuchinho_Vermelho.start("game_over")
+Capuchinho_Vermelho.start("main_menu")

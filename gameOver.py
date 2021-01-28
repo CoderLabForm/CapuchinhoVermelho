@@ -96,27 +96,21 @@ class GameOver(object):
         text2 = 'Basket: '
         # data last game
         file = open('save/resultado_partida.txt','r')
-        data = file.read()
+        data = file.read().split(" ")
         file.close()
-        score = data[0]
-        sweets = data[1]
-
-        print(score, sweets)
+        score = int(data[0])
+        sweets = int(data[1])
 
         # Data Best score ever
-        data = data.split(' ')
         file = open('save/data.txt','r')
-        data = file.read()
+        data = file.read().split(' ')
         file.close()
-        data = data.split(' ')
-
-        currentBestScore = data[0]
-        currentBestSweets = data[1]
+        currentBestScore = int(data[0])
+        currentBestSweets = int(data[1])
 
         if(score > currentBestScore):
             text1 = 'New best Score: '
             currentBestScore = score
-        if(sweets > currentBestSweets):
             text2 = 'Basket: '
             currentBestSweets = sweets
 

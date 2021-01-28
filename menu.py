@@ -24,8 +24,8 @@ class MainMenu(object):
         data = file.read()
         file.close()
         data = data.split(' ')
-        currentBestScore = int(data[0])
-        currentBestSweets = int(data[1])
+        currentBestScore = data[0]
+        currentBestSweets = data[1]
 
         self.text = ["Best Score: "+str(currentBestScore), "Basket: "+str(currentBestSweets)]
 
