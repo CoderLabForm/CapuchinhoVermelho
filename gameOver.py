@@ -5,7 +5,6 @@ from pygame.locals import *
 class GameOver(object):
     def __init__(self, screen):
         self.screen = screen
-        # self.font = pygame.font.SysFont("Arial", 24)
         self.menuControl = 200
         self.font = pygame.font.SysFont("comicsansms", 120)
         self.font.set_bold(True)
@@ -45,35 +44,30 @@ class GameOver(object):
         self.screen.blit(self.mainMenuState, self.allPosition[1])
 
     def drawGameOverMenu(self):
+        pygame.time.delay(200)
         while self.run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-            pressed_keys = pygame.key.get_pressed()
-            if pressed_keys[K_DOWN]:
-                pygame.time.delay(200)
-                if self.menuControl == 300:
-                    self.menuControl = 200
-                else:
-                    self.menuControl += 100
-            elif pressed_keys[K_UP]:
-                pygame.time.delay(200)
-                if self.menuControl == 200:
-                    self.menuControl = 200
-                else:
-                    self.menuControl -= 100
-            if pressed_keys[K_RETURN] and self.menuControl==200:
-                pygame.time.delay(200)
-                return 'game'
-            elif pressed_keys[K_RETURN] and self.menuControl==300:
-                pygame.time.delay(200)
-                return 'main_menu'
+                if event.type == pygame.KEYDOWN:
+                    pressed_keys = pygame.key.get_pressed()
+                    if pressed_keys[K_DOWN]:
+                        if self.menuControl == 300:
+                            self.menuControl = 200
+                        else:
+                            self.menuControl += 100
+                    elif pressed_keys[K_UP]:
+                        if self.menuControl != 200:
+                            self.menuControl -= 100
+                    if pressed_keys[K_RETURN] and self.menuControl==200:
+                        return 'game'
+                    elif pressed_keys[K_RETURN] and self.menuControl==300:
+                        return 'main_menu'
             self.settingGameOverMenu()
             pygame.display.update()
         return True
 
     def savingBestsScores(self):
-        print(1)
         # data last game
         file = open('save/resultado_partida.txt', 'r')
         data = file.read().split(" ")

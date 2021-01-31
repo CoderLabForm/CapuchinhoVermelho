@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 
-class ExitMenu(object):
+class PauseMenu(object):
     def __init__(self, screen):
         self.screen = screen
         self.font = pygame.font.SysFont("comicsansms", 40)
@@ -18,7 +18,7 @@ class ExitMenu(object):
         self.run = True
         self.allPosition = [(230, 250), (430, 250)]
 
-    def settingExitMenu(self):
+    def settingPauseMenu(self):
         self.back = pygame.image.load("Imagens/buttons/Menu1.png").convert_alpha()
         self.screen.blit(self.back, (0, 0))
         # Controling menu buttons efects
@@ -29,17 +29,17 @@ class ExitMenu(object):
             self.yesState = self.yes[0]
             self.noState = self.no[1]
         size = pygame.font.Font.size(self.font, self.text)
-        line = self.font.render(self.text, True, (255, 255,255))
-        self.screen.blit(line, ((700/2-size[0]/2)+20, 100))
+        line = self.font.render(self.text, True, (255, 255, 255))
+        self.screen.blit(line, ((350-size[0]/2)+20, 100))
         self.screen.blit(self.yesState, self.allPosition[0])
         self.screen.blit(self.noState, self.allPosition[1])
 
-    def drawExitMenu(self):
-        pygame.time.delay(300)
+    def drawPauseMenu(self):
         while self.run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return False
+                    exit(1)
+
             pressed_keys = pygame.key.get_pressed()
             if pressed_keys[K_RIGHT]:
                 if self.menuControl == 430:
@@ -51,12 +51,10 @@ class ExitMenu(object):
                     self.menuControl = 230
                 else:
                     self.menuControl -= 200
+
             if pressed_keys[K_RETURN] and self.menuControl==230:
-                pygame.time.delay(100)
-                exit()
+                return True
             elif pressed_keys[K_RETURN] and self.menuControl==430:
-                pygame.time.delay(200)
-                return 'main_menu'
-            self.settingExitMenu()
+                return False
+            self.settingPauseMenu()
             pygame.display.update()
-        return True

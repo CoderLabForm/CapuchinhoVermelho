@@ -3,7 +3,6 @@ import random
 import funcoes as f
 
 distancia_obstaculos = 250
-parts_distance = 5
 velocidade_inicial = 3
 espaco_entre_obstaculos = [o for o in range(0, 600, distancia_obstaculos)]
 
@@ -15,7 +14,7 @@ class Personagem:
         self.ordem_imagens = [0, 1, 2, 3, 4, 3, 2, 1]
         self.indice_imagem = 0
         self.aumento_indice = 0
-        self.velocidade = 19
+        self.velocidade = 10
         self.x = 310
         self.y = 200
         self.altura_salto = 20
@@ -34,8 +33,8 @@ class Personagem:
         value = 0
         newdoces = []
         for doce in coletaveis:
-            if doce.x + 44 >= self.rect[0] and doce.x <= self.rect[0] + self.rect[2]:
-                if doce.y + 24 >= self.rect[1] and doce.y <= self.rect[1] + self.rect[3]:
+            if doce.x + 32 >= self.rect[0] and doce.x <= self.rect[0] + self.rect[2]:
+                if doce.y + 32 >= self.rect[1] and doce.y <= self.rect[1] + self.rect[3]:
                     value += doce.value
                     continue
                 else:
@@ -52,38 +51,15 @@ class Personagem:
             self.aumento_indice = 0
         if self.indice_imagem >= len(self.ordem_imagens)-1:
             self.indice_imagem = 0
-        # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
 
     def movement(self, event):
-        movements = {"D": -self.velocidade, "E": self.velocidade}
-        self.y += movements[event]
-        if self.destination == 1:
-            if self.direction == "R":
-                self.destination = 2
-            elif self.direction == "L":
-                self.destination = 0
-        elif self.destination == 2:
-            if self.direction == "R":
-                self.destination = 2
-            elif self.direction == "L":
-                self.destination = 1
-        elif self.destination == 0:
-            if self.direction == "R":
-                self.destination = 1
-            elif self.direction == "L":
-                self.destination = 0
-        self.keep_moving = True
+        movements = {"D": self.velocidade, "E": -self.velocidade}
+        self.x += movements[event]
         if self.x > self.coordenadas_x[2]:
             self.x = self.coordenadas_x[2]
         elif self.coordenadas_x[0] > self.x:
             self.x = self.coordenadas_x[0]
         self.rect = (self.x, self.y, self.imagens[0].get_size()[0], self.imagens[0].get_size()[1])
-
-    def continua_mov(self):
-        if self.keep_moving:
-            self.movement(self.direction)
-        if self.y in self.coordenadas_x:
-            self.keep_moving = False
 
 
 class Caminho:
@@ -149,9 +125,9 @@ class _obstaculo:
 
     def calculate_position_x(self, ultimo_x):
         if ultimo_x == 0:
-            return random.choice([187, 360, 533]) + self.adjust
-        possibilities = {187: [360, 533], 360: [187, 533], 533: [187, 360]}
-        return random.choice(possibilities[ultimo_x - self.adjust]) + self.adjust
+            return random.choice([107, 280, 453])
+        possibilities = {107: [280, 453], 280: [107, 453], 453: [107, 280]}
+        return random.choice(possibilities[ultimo_x])
 
     def draw(self, screen):
         screen.blit(self.imagem, (self.x, self.y))
@@ -164,12 +140,11 @@ class Obstaculos:
     def __init__(self):
         self.lista_interna = []
         self.max = len(espaco_entre_obstaculos)
-        self.ajuste = 80
         self.velocidade = velocidade_inicial
         self.criar_obstaculos(True)
 
     def criar_obstaculos(self, inicializacao=False):
-        posicoes_x = [187-self.ajuste, 360-self.ajuste, 533-self.ajuste]
+        posicoes_x = [107, 280, 453]
         posi1, posi2, posi3 = 0, 0, 0
         if inicializacao:
             posi1 = random.choice(posicoes_x)
@@ -197,72 +172,55 @@ class Obstaculos:
             obst.draw(screen)
             obst.mover(self.velocidade)
 
-"""
+
 class doce:
-    def __init__(self, x, type_p, y, cardinality):
+    def __init__(self, y, type_p, x, ajuste_vel):
         self.type_p = type_p
-        self.adjust = 15
-        self.y_middle = y + self.adjust
-        self.y = self.y_middle + cardinality
+        self.y = y
         self.x = x
-        self.value = self.type_p ** 2
+        self.value = self.type_p
         self.image = pygame.image.load(f"Imagens/Doces/{self.type_p}.png")
         self.hit_box = pygame.mask.from_surface(self.image.convert_alpha())
         self.comprimento = 32
-        self.movement_module = 10
-        self.upwards = True
+        self.velocidade = velocidade_inicial+ ajuste_vel
         self.rect = self.image.get_rect()
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
     def mover(self):
-        alternation = {True: -1, False: 1}
-        advancement_y = alternation[self.upwards]
-        self.x -= 10
-        self.y += advancement_y
-        if self.y_middle + self.movement_module * advancement_y == self.y and self.upwards:
-            self.upwards = not self.upwards
-        elif self.y_middle + self.movement_module * advancement_y == self.y and not self.upwards:
-            self.upwards = not self.upwards
-
+        self.y += self.velocidade
 
 
 class Doces:
     def __init__(self):
-        self.internal_list = []
-        self.firstdoces = True
-        self.choices = [20, 130, 240]
-        self.y = random.choice(self.choices)
-        self.distancia_entre_doces = 5 + 44
+        self.lista_interna = []
+        self.primeiros_doces = True
+        self.coordenadas = [167, 340, 513]
+        self.x = random.choice(self.coordenadas)
+        self.distancia_entre_doces = 10
+        self.velocidade_adicional = 0
+        self.ultima_velocidade = 0
         self.min_dist_between_blocs = 100
         self.max_dist_between_blocs = 200
+        self.ultimo_y = 0
         self.mindoces = 3
-        self.maxdoces = 7
+        self.maxdoces = 5
 
-    def control_last(self):
-        if self.internal_list[-1].x <= espaco_entre_obstaculos[-2]:
-            return True
+    def controlar_ultimo(self):
+        if len(self.lista_interna):
+            if self.lista_interna[-1].y > 480:
+                return True
+            else:
+                return False
         else:
-            return False
+            return True
 
     def criar_doces(self):
-        dist_between_blocs = random.randint(self.min_dist_between_blocs, self.max_dist_between_blocs)
-        type_p = self.calculate_typedoce()
-        if self.firstdoces:
-            for i in range(random.randint(self.mindoces, self.maxdoces)):
-                self.internal_list.append(
-                    doce(espaco_entre_obstaculos[-1] + dist_between_blocs + i * self.distancia_entre_doces, type_p,
-                          self.y, i % 10))
-            self.firstdoces = False
-            return 0
-        if self.control_last():
-            for i in range(random.randint(self.mindoces, self.maxdoces)):
-                self.internal_list.append(
-                    doce(espaco_entre_obstaculos[-1] + dist_between_blocs + i * self.distancia_entre_doces,
-                          type_p, self.y, i % 10))
-            self.y = random.choice(self.choices)
-            return 0
+        self.x = random.choice(self.coordenadas)
+        self.lista_interna = [doce(-50-i*32*7, self.calculate_typedoce(), random.choice(self.coordenadas),
+                                   self.velocidade_adicional) for i in
+                              range(random.randint(self.mindoces, self.maxdoces))]
 
     @staticmethod
     def calculate_typedoce():
@@ -278,38 +236,15 @@ class Doces:
         else:
             return 5
 
-    def remover_doces(self, internal_list_obst):
-        for d, obst in zip(self.internal_list, internal_list_obst):
-            if d.x < d.comprimento:
-                self.internal_list.remove(d)
+    def mudar_velocidade(self):
+        self.velocidade_adicional += 1
+
+    def remover_doces(self, lista_interna_obst):
+        for d, obst in zip(self.lista_interna, lista_interna_obst):
+            if d.y < d.comprimento:
+                self.lista_interna.remove(d)
 
     def draw(self, screen):
-        for d in self.internal_list:
-            d.draw()
+        for d in self.lista_interna:
+            d.draw(screen)
             d.mover()
-
-
-class HUD:
-    def __init__(self, screen, mode=False):
-        self.screen = screen
-        #self.speed_meter_image = pygame.image.load("images/HUD/meter/7.png")
-        #self.precision_meter_image = pygame.image.load("images/HUD/meter/7.png")
-        self.speed = 0
-        self.precision = 0
-        self.energy = 0
-        self.resistance = 0
-        self.doces = 0
-        self.mode = mode
-        if mode:
-            self.time = "infinite"
-        else:
-            self.time = 60
-        self.set_up_HUD()
-
-    def set_up_HUD(self):
-        pass
-
-    def draw(self, numero_doces, numero_vidas):
-        f.mostrar_vidas(self.screen, numero_vidas)
-        f.mostrar_doces(self.screen, numero_doces)
-"""

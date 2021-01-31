@@ -1,5 +1,6 @@
 import pygame
 import funcoes as f
+import linkagem as lm
 import opc
 
 
@@ -10,12 +11,10 @@ class Jogo:
         self.capuchinho = opc.Personagem()
         self.caminho = opc.Caminho()
         self.obstaculos = opc.Obstaculos()
-        #self.doces = opc.Doces()
+        self.doces = opc.Doces()
+        self.doces.criar_doces()
         self.doces_coletados = 0
         self.score = 0
-        # HUD stuff
-        self.vidas = 3
-        #self.hud = opc.HUD(self.screen)
         # loop stuff
         self.velocidade = 0
         self.clock = pygame.time.Clock()
@@ -26,9 +25,9 @@ class Jogo:
 
     def refresh_game(self):
         self.caminho.draw(self.screen)
-        self.capuchinho.draw(self.screen)
-        #self.doces.draw(self.screen)
+        self.doces.draw(self.screen)
         self.obstaculos.draw(self.screen)
+        self.capuchinho.draw(self.screen)
         self.mostrar_informacao()
         pygame.display.update()
 
@@ -45,12 +44,10 @@ class Jogo:
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.capuchinho.movement("D")
         elif keys[pygame.K_ESCAPE] or keys[pygame.K_SPACE]:
-            self.voltar_ao_menu = True
+            self.voltar_ao_menu = self.pause()
 
-    def continue_game(self):
-        if self.vidas <= 0:
-            return False
-        return True
+    def pause(self):
+        return lm.pause_game(self.screen)
 
     def gravar_resultados(self):
         ficheiro = open("save/resultado_partida.txt", "w")
@@ -63,7 +60,7 @@ class Jogo:
             self.capuchinho.velocidade += 1
             self.caminho.velocidade += 1
             self.obstaculos.velocidade += 1
-            #self.doces.velocidade += 1
+            self.doces.mudar_velocidade()
             self.bandeira_velocidade = False
         elif int(self.tempo) % 10 != 0 and not self.bandeira_velocidade:
             self.bandeira_velocidade = True
@@ -80,27 +77,19 @@ class Jogo:
                 if event.type == pygame.QUIT:
                     self.gravar_resultados()
                     return False
-                if event.type == pygame.KEYDOWN:
-                    self.manage_buttons(pygame.key.get_pressed())
-                    if self.voltar_ao_menu:
-                        self.gravar_resultados()
-                        return True
-            #self.doces.remover_doces(self.obstaculos.internal_list)
-            #self.doces.criar_doces()
-            #if self.tempo >= 4:
-                #if damage_count >= 0.5:
-                    #if self.capuchinho.collisao_obstaculos(self.obstaculos.internal_list):
-                        #self.vidas -= 1
-                        #self.capuchinho.x -= 10
-                        #damage_count = 0
-                #else:
-                    #damage_count += 0.01
-            #self.doces.internal_list, value = self.capuchinho.colisao_doces(self.doces.internal_list)
-            #self.doces_coletados += value
+            self.manage_buttons(pygame.key.get_pressed())
+            if self.voltar_ao_menu:
+                self.gravar_resultados()
+                return False
+            if self.doces.controlar_ultimo():
+                self.doces.criar_doces()
+            # if self.capuchinho.collisao_obstaculos(self.obstaculos.internal_list):
+                    # self.capuchinho.x -= 10
+                    # self.death_display
+            self.doces.lista_interna, value = self.capuchinho.colisao_doces(self.doces.lista_interna)
+            self.doces_coletados += value
             self.obstaculos.remover_obstaculos()
             self.update_speed()
-            if self.run:
-                self.run = self.continue_game()
             self.atualizar_score()
             self.refresh_game()
         self.gravar_resultados()
