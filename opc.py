@@ -11,7 +11,11 @@ class Personagem:
     def __init__(self):
         self.coordenadas_x = [137, 310, 483]
         self.imagens = [pygame.image.load(f"Imagens/capuchinho/capuchinho"+str(i)+".png") for i in range(5)]
+        self.imagens_salto = [pygame.image.load(f"Imagens/capuchinho/salto/"+str(i)+".png") for i in range(4)]
+        self.esta_saltando = False
+        self.indice_salto = 0
         self.ordem_imagens = [0, 1, 2, 3, 4, 3, 2, 1]
+        self.ordem_imagens_salto = [0, 0, 1, 1, 1, 1,  1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1,0]
         self.indice_imagem = 0
         self.aumento_indice = 0
         self.velocidade = 10
@@ -25,6 +29,8 @@ class Personagem:
         self.rect = (self.x, self.y, self.imagens[0].get_size()[0], self.imagens[0].get_size()[1])
 
     def collisao_obstaculos(self, obstaculos):
+        if self.esta_saltando:
+            return False
         for obst in obstaculos:
             if self.y+100 < obst.y:
                 return False
@@ -36,6 +42,8 @@ class Personagem:
     def colisao_doces(self, coletaveis):
         value = 0
         newdoces = []
+        if self.esta_saltando:
+            return newdoces, value
         for doce in coletaveis:
             if doce.x + 32 >= self.rect[0] and doce.x <= self.rect[0] + self.rect[2]:
                 if doce.y + 32 >= self.rect[1] and doce.y <= self.rect[1] + self.rect[3]:
@@ -48,6 +56,13 @@ class Personagem:
         return newdoces, value
 
     def draw(self, screen):
+        if self.esta_saltando:
+            screen.blit(self.imagens_salto[self.ordem_imagens_salto[self.indice_salto]], (self.x, self.y))
+            self.indice_salto += 1
+            if self.indice_salto == len(self.ordem_imagens_salto)-1:
+                self.indice_salto = 0
+                self.esta_saltando = False
+            return None
         screen.blit(self.imagens[self.ordem_imagens[self.indice_imagem]], (self.x, self.y))
         self.aumento_indice += 0.15
         self.indice_imagem += int(self.aumento_indice)
@@ -57,13 +72,16 @@ class Personagem:
             self.indice_imagem = 0
 
     def movement(self, event):
-        movements = {"D": self.velocidade, "E": -self.velocidade}
-        self.x += movements[event]
-        if self.x > self.coordenadas_x[2]:
-            self.x = self.coordenadas_x[2]
-        elif self.coordenadas_x[0] > self.x:
-            self.x = self.coordenadas_x[0]
-        self.rect = (self.x, self.y, self.imagens[0].get_size()[0], self.imagens[0].get_size()[1])
+        if event == "S":
+            self.esta_saltando = True
+        else:
+            movements = {"D": self.velocidade, "E": -self.velocidade}
+            self.x += movements[event]
+            if self.x > self.coordenadas_x[2]:
+                self.x = self.coordenadas_x[2]
+            elif self.coordenadas_x[0] > self.x:
+                self.x = self.coordenadas_x[0]
+            self.rect = (self.x, self.y, self.imagens[0].get_size()[0], self.imagens[0].get_size()[1])
 
 
 class Caminho:
