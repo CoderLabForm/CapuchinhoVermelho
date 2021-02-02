@@ -22,8 +22,19 @@ def imagens_pontos_doces(score, doces):
 
 
 def carregar_som(nome):
-    return pygame.mixer.Sound("sons/"+nome+".WAV")
+    try:
+        som = pygame.mixer.Sound("sons/"+nome+".WAV")
+    except FileNotFoundError:
+        som = pygame.mixer.Sound("sons/"+nome+".mp3")
+    return som
 
 
-def reproduzir(som):
-    som.play()
+def reproduzir(som, musica=False):
+    if musica:
+        som.play(-1)
+    else:
+        som.play()
+
+
+def parar_gradualmente():
+    pygame.mixer.fadeout(1)

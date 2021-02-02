@@ -3,6 +3,9 @@ import funcoes as f
 import linkagem as lm
 import opc
 
+som_lobo = f.carregar_som("ataque_lobo")
+som_lobo.set_volume(0.5)
+musica = f.carregar_som("musica_capuchinho")
 
 class Jogo:
     def __init__(self, screen):
@@ -15,6 +18,7 @@ class Jogo:
         self.doces.criar_doces()
         self.doces_coletados = 0
         self.score = 0
+        self.lobo_x = self.capuchinho.x
         # loop stuff
         self.velocidade = 0
         self.clock = pygame.time.Clock()
@@ -22,6 +26,7 @@ class Jogo:
         self.run = True
         self.bandeira_velocidade = True
         self.tempo = 0
+        self.reproduzir_musica = True
 
     def refresh_game(self):
         self.caminho.draw(self.screen)
@@ -29,6 +34,7 @@ class Jogo:
         self.obstaculos.draw(self.screen)
         self.capuchinho.draw(self.screen)
         self.mostrar_informacao()
+        self.screen.blit(pygame.image.load("Imagens/lobo.png"), (self.lobo_x, 359))
         pygame.display.update()
 
     def mostrar_informacao(self):
@@ -47,6 +53,8 @@ class Jogo:
             self.voltar_ao_menu = self.pause()
 
     def pause(self):
+        f.parar_gradualmente()
+        self.reproduzir_musica = True
         return lm.pause_game(self.screen)
 
     def gravar_resultados(self):
@@ -68,10 +76,27 @@ class Jogo:
     def atualizar_score(self):
         self.score = int((self.velocidade+1)*10*(self.tempo*2)+self.doces_coletados)
 
+    def atualizar_posicao_lobo(self):
+        distancia = self.capuchinho.x - self.lobo_x
+        if distancia > 0:
+            self.lobo_x = self.capuchinho.x - distancia-10
+            if self.lobo_x < self.capuchinho.x:
+                self.lobo_x = self.capuchinho.x
+        elif distancia < 0:
+            self.lobo_x = self.capuchinho.x + distancia+10
+            if self.lobo_x > self.capuchinho.x:
+                self.lobo_x = self.capuchinho.x
+        print(self.lobo_x)
+
     def game_loop(self):
         damage_count = 4
+        mudar_x_lobo = 0
         while self.run:
+            if self.reproduzir_musica:
+                musica.play(True)
+                self.reproduzir_musica = False
             self.tempo += self.clock.tick(60) / (60 * 30)
+            self.atualizar_posicao_lobo()
     # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -80,6 +105,8 @@ class Jogo:
             self.manage_buttons(pygame.key.get_pressed())
             if self.voltar_ao_menu:
                 self.gravar_resultados()
+                f.parar_gradualmente()
+                f.reproduzir(som_lobo)
                 return False
             if self.doces.controlar_ultimo():
                 self.doces.criar_doces()
@@ -93,4 +120,6 @@ class Jogo:
             self.atualizar_score()
             self.refresh_game()
         self.gravar_resultados()
+        f.parar_gradualmente()
+        f.reproduzir(som_lobo)
         return True

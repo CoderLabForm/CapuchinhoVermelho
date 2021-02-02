@@ -223,17 +223,7 @@ class Doces:
 
     @staticmethod
     def calculate_typedoce():
-        probability = random.random()
-        if probability <= 0.3:
-            return 1
-        elif 0.3 < probability <= 0.55:
-            return 2
-        elif 0.55 < probability <= 0.75:
-            return 3
-        elif 0.75 < probability <= 0.9:
-            return 4
-        else:
-            return 5
+        return random.randint(1, 8)
 
     def mudar_velocidade(self):
         self.velocidade_adicional += 1

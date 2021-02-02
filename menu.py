@@ -3,6 +3,7 @@ from pygame.locals import *
 import funcoes as f
 som_botao = f.carregar_som("typing")
 
+
 class MainMenu(object):
     def __init__(self, screen):
         self.screen = screen
