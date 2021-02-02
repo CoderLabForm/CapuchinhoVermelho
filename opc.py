@@ -168,7 +168,6 @@ class Obstaculos:
 
     def draw(self, screen):
         for obst in self.lista_interna:
-            # print(obst.x, obst.y)
             obst.draw(screen)
             obst.mover(self.velocidade)
 

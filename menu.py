@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
-
+import funcoes as f
+som_botao = f.carregar_som("typing")
 
 class MainMenu(object):
     def __init__(self, screen):
@@ -68,12 +69,14 @@ class MainMenu(object):
             pressed_keys = pygame.key.get_pressed()
             if pressed_keys[K_DOWN]:
                 pygame.time.delay(200)
+                f.reproduzir(som_botao)
                 if self.menuControl == 400:
                     self.menuControl = 200
                 else:
                     self.menuControl += 100
             elif pressed_keys[K_UP]:
                 pygame.time.delay(200)
+                f.reproduzir(som_botao)
                 if self.menuControl == 200:
                     self.menuControl = 200
                 else:

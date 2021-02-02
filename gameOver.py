@@ -68,30 +68,46 @@ class GameOver(object):
         return True
 
     def savingBestsScores(self):
+        sweets_flag = False
+        score_flag = False
         # data last game
         file = open('save/resultado_partida.txt', 'r')
         data = file.read().split(" ")
         file.close()
         score = int(data[0])
         sweets = int(data[1])
+        print(sweets)
         # Data Best score ever
         file = open('save/data.txt', 'r')
         data = file.read().split(' ')
         file.close()
         currentBestScore = int(data[0])
         currentBestSweets = int(data[1])
-
+        print(currentBestSweets)
+        if sweets> currentBestSweets:
+            currentBestSweets = sweets
+            sweets_flag = True
         if score > currentBestScore:
             text1 = 'New best Score: '
             currentBestScore = score
             text2 = 'Basket: '
             currentBestSweets = sweets
+            """file = open("save/data.txt", "w")
+            file.write(f"{currentBestScore} {currentBestSweets}")
+            file.close()"""
+            score_flag = True
+        else:
+            currentBestScore = score
+            currentBestSweets = sweets
+            text1 = 'Score: '
+            text2 = 'Basket: '
+        if score_flag:
             file = open("save/data.txt", "w")
             file.write(f"{currentBestScore} {currentBestSweets}")
             file.close()
-        else:
-            currentBestScore = score
-            text1 = 'Score: '
-            text2 = 'Basket: '
+        if sweets_flag:
+            file = open("save/data.txt", "w")
+            file.write(f"{currentBestScore} {currentBestSweets}")
+            file.close()
         # score
         self.text = [text1+str(currentBestScore), text2+str(currentBestSweets)]

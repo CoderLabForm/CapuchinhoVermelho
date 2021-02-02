@@ -1,5 +1,7 @@
 import pygame
 
+pygame.mixer.init()
+
 
 def criar_imagens(texto):
     pygame.font.init()
@@ -17,3 +19,11 @@ def imagens_pontos_doces(score, doces):
     imagem_score = criar_imagens(str(score))
     imagem_doces = criar_imagens(str(doces))
     return [imagem_score, imagem_doces]
+
+
+def carregar_som(nome):
+    return pygame.mixer.Sound("sons/"+nome+".WAV")
+
+
+def reproduzir(som):
+    som.play()
