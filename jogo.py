@@ -86,7 +86,6 @@ class Jogo:
             self.lobo_x = self.capuchinho.x + distancia+10
             if self.lobo_x > self.capuchinho.x:
                 self.lobo_x = self.capuchinho.x
-        print(self.lobo_x)
 
     def game_loop(self):
         damage_count = 4
@@ -101,6 +100,8 @@ class Jogo:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.gravar_resultados()
+                    f.parar_gradualmente()
+                    f.reproduzir(som_lobo)
                     return False
             self.manage_buttons(pygame.key.get_pressed())
             if self.voltar_ao_menu:
@@ -110,9 +111,9 @@ class Jogo:
                 return False
             if self.doces.controlar_ultimo():
                 self.doces.criar_doces()
-            # if self.capuchinho.collisao_obstaculos(self.obstaculos.internal_list):
-                    # self.capuchinho.x -= 10
-                    # self.death_display
+            if self.capuchinho.collisao_obstaculos(self.obstaculos.lista_interna):
+                self.capuchinho.x -= 10
+                self.run = False
             self.doces.lista_interna, value = self.capuchinho.colisao_doces(self.doces.lista_interna)
             self.doces_coletados += value
             self.obstaculos.remover_obstaculos()

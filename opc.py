@@ -21,11 +21,15 @@ class Personagem:
         self.keep_moving = False
         self.destination = 1
         self.direction = None
+        self.hit_box = pygame.mask.from_surface(self.imagens[self.indice_imagem].convert_alpha())
         self.rect = (self.x, self.y, self.imagens[0].get_size()[0], self.imagens[0].get_size()[1])
 
     def collisao_obstaculos(self, obstaculos):
         for obst in obstaculos:
-            if False:
+            if self.y+100 < obst.y:
+                return False
+            if self.hit_box.overlap(obst.hit_box, (self.x - obst.x-30, self.y - obst.y+175)):
+                # f.play(hit_sound)
                 return True
         return False
 

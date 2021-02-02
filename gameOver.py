@@ -76,14 +76,12 @@ class GameOver(object):
         file.close()
         score = int(data[0])
         sweets = int(data[1])
-        print(sweets)
         # Data Best score ever
         file = open('save/data.txt', 'r')
         data = file.read().split(' ')
         file.close()
         currentBestScore = int(data[0])
         currentBestSweets = int(data[1])
-        print(currentBestSweets)
         if sweets> currentBestSweets:
             currentBestSweets = sweets
             sweets_flag = True
